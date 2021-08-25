@@ -1,3 +1,4 @@
+import { Organization } from '../organization/entity/organization.entity';
 import {
   Column,
   Entity,
@@ -28,6 +29,18 @@ export class User {
   // Employee == 1
   // Admin == 2
   role: UserRole[];
+
+  @ManyToMany(() => Organization, (organization) => organization.users, {
+    eager: true,
+  })
+  @JoinTable()
+  organizations: Organization[];
+
+  @ManyToMany(() => Organization, (organization) => organization.admins, {
+    eager: true,
+  })
+  @JoinTable()
+  ownOrganizations: Organization[];
 }
 
 @Entity()
