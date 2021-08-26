@@ -103,7 +103,7 @@ export class OrganizationService {
     const organization = await this.organizationRepo.findOne({
       id: organizationId,
     });
-    const query = this.annoucementRepo.createQueryBuilder('area');
+    const query = this.areaRepo.createQueryBuilder('area');
     query.where({ organization });
     const area = await query.getMany();
     return area;
@@ -125,7 +125,7 @@ export class OrganizationService {
     const organization = await this.organizationRepo.findOne({
       id: organizationId,
     });
-    const query = this.annoucementRepo.createQueryBuilder('room');
+    const query = this.roomRepo.createQueryBuilder('room');
     query.where({ organization });
     const room = await query.getMany();
     return room;
