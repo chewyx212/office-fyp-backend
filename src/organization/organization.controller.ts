@@ -1,7 +1,10 @@
+import { Room } from './entity/room.entity';
+import { Area } from './entity/area.entity';
 import { Announcement } from './entity/announcement.entity';
 import {
   CreateOrganizationDto,
   CreateAnnoucementDto,
+  CreateDto,
 } from './dto/organization.dto';
 import { Organization } from './entity/organization.entity';
 import { User } from 'src/auth/user.entity';
@@ -41,8 +44,23 @@ export class OrganizationController {
     return this.organizationService.getAllAnnoucementById(organizationId);
   }
 
-  //   @Get('/annoucement/:id')
-  //   getAllAnnoucementById(@Body('id') id: string): Promise<Announcement[]> {
-  //     return this.organizationService.getAllAnnoucementById(id);
-  //   }
+  @Post('/area')
+  createArea(@Body() areaDto: CreateDto): Promise<Area> {
+    return this.organizationService.createArea(areaDto);
+  }
+
+  @Get('/area')
+  getAllArea(@Body('organizationId') organizationId: string): Promise<Area[]> {
+    return this.organizationService.getAllArea(organizationId);
+  }
+
+  @Post('/room')
+  createRoom(@Body() roomDto: CreateDto): Promise<Room> {
+    return this.organizationService.createRoom(roomDto);
+  }
+
+  @Get('/room')
+  getAllRoom(@Body('organizationId') organizationId: string): Promise<Room[]> {
+    return this.organizationService.getAllRoom(organizationId);
+  }
 }

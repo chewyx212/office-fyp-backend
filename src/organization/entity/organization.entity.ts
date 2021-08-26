@@ -1,4 +1,6 @@
+import { Area } from './area.entity';
 import { Announcement } from './announcement.entity';
+import { Room } from './room.entity';
 import { User } from '../../auth/user.entity';
 import {
   Column,
@@ -27,4 +29,10 @@ export class Organization {
 
   @OneToMany(() => Announcement, (annoucement) => annoucement.organization)
   announcements: Announcement[];
+
+  @OneToMany(() => Area, (area) => area.organization)
+  areas: Area[];
+
+  @OneToMany(() => Room, (Room) => Room.organization)
+  rooms: Room[];
 }

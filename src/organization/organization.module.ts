@@ -1,3 +1,5 @@
+import { RoomRepository } from './repository/room.repository';
+import { AreaRepository } from './repository/area.repository';
 import { UsersRepository } from './../auth/repository/users.repository';
 import { OrganizationRepository } from './repository/organization.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,6 +14,8 @@ import { AnnoucementRepository } from './repository/announcement.repository';
       OrganizationRepository,
       UsersRepository,
       AnnoucementRepository,
+      AreaRepository,
+      RoomRepository,
     ]),
   ],
   controllers: [OrganizationController],

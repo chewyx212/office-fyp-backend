@@ -2,17 +2,17 @@ import { Organization } from './organization.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Announcement {
+export class Room {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  title: string;
+  name: string;
 
   @Column()
-  description: string;
+  status: boolean;
 
-  @ManyToOne(() => Organization, (organization) => organization.announcements, {
+  @ManyToOne(() => Organization, (organization) => organization.rooms, {
     onDelete: 'CASCADE',
   })
   organization: Organization;

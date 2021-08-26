@@ -16,3 +16,10 @@ export class CreateAnnoucementDto {
   @IsString()
   organizationId: string;
 }
+
+export class CreateDto {
+  @IsString()
+  name: string;
+  @IsString()
+  organizationId: string;
+}
