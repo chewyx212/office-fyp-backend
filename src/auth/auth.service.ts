@@ -1,3 +1,4 @@
+import { JwtPayload } from './jwt-payload.interface';
 import { RolesRepository } from './repository/roles.repository';
 import { SignInPayload } from './payload.interface';
 import { SignUpDto, SignInDto } from './dto/auth.dto';
@@ -37,9 +38,10 @@ export class AuthService {
     const { email, password } = signInDto;
     const user = await this.userRepo.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const token = await this.jwtService.sign({ email });
-      const payload: SignInPayload = { user, token };
-      return payload;
+      const payload: JwtPayload = { email };
+      const token = await this.jwtService.sign(payload);
+      const signin: SignInPayload = { user, token };
+      return signin;
     } else {
       throw new UnauthorizedException('Pleace check your login credential');
     }

@@ -8,6 +8,7 @@ import {
   CreateOrganizationDto,
   CreateAnnoucementDto,
   CreateDto,
+  AddMemberDto,
 } from './dto/organization.dto';
 import { Organization } from './entity/organization.entity';
 import { User } from 'src/auth/user.entity';
@@ -44,20 +45,29 @@ export class OrganizationService {
       address,
     });
     const organization = await this.organizationRepo.save(data);
-    console.log(organization);
-    const myUser = await this.userRepo.findOne(user, {
-      relations: ['organizations', 'ownOrganizations'],
-    });
-    myUser.organizations.push(organization);
-    myUser.ownOrganizations.push(organization);
-    await this.userRepo.save(myUser);
+    user.organizations.push(organization);
+    user.ownOrganizations.push(organization);
+    await this.userRepo.save(user);
     return organization;
   }
-  async getOrganization(user: User): Promise<Organization[]> {
-    const result = await this.userRepo.findOne(user, {
-      relations: ['organizations'],
+  async getUserOrganization(user: User): Promise<User> {
+    return user;
+  }
+  async getOrganizationById(id: string): Promise<Organization> {
+    // const organization = await this.organizationRepo.findOne(id);
+    const organization = await this.organizationRepo
+      .createQueryBuilder('organization')
+      .where('organization.id =:id', { id })
+      .leftJoinAndSelect('organization.users', 'user')
+      .getOne();
+    return organization;
+  }
+  async addOrganizationMember(addMemberDto: AddMemberDto): Promise<any> {
+    const { email, organizationId } = addMemberDto;
+    const myOrganization = await this.organizationRepo.findOne({
+      id: organizationId,
     });
-    return result.organizations;
+    console.log(myOrganization);
   }
 
   async createAnnoucement(

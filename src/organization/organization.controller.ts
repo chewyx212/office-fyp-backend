@@ -5,20 +5,24 @@ import {
   CreateOrganizationDto,
   CreateAnnoucementDto,
   CreateDto,
+  AddMemberDto,
+  OrganizationDto,
 } from './dto/organization.dto';
 import { Organization } from './entity/organization.entity';
 import { User } from 'src/auth/user.entity';
 import { GetUser } from './../auth/get-user.decorator';
 import { OrganizationService } from './organization.service';
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('organization')
+@UseGuards(AuthGuard())
 export class OrganizationController {
   constructor(private organizationService: OrganizationService) {}
 
   @Get()
-  getOrganization(@GetUser() user: User): Promise<Organization[]> {
-    return this.organizationService.getOrganization(user);
+  getOrganization(@GetUser() user: User): Promise<User> {
+    return this.organizationService.getUserOrganization(user);
   }
   @Post()
   createOrganization(
@@ -30,6 +34,20 @@ export class OrganizationController {
       createOrganizationDto,
     );
   }
+
+  @Post('/detail')
+  getOrganizationById(
+    @Body() organizationDto: OrganizationDto,
+  ): Promise<Organization> {
+    const { organizationId } = organizationDto;
+    console.log(organizationId);
+    return this.organizationService.getOrganizationById(organizationId);
+  }
+  @Post('/member')
+  addOrganizationMember(@Body() addMemberDto: AddMemberDto): Promise<any> {
+    return this.organizationService.addOrganizationMember(addMemberDto);
+  }
+
   @Post('/annoucement')
   createAnnoucement(
     @Body() annoucementDto: CreateAnnoucementDto,

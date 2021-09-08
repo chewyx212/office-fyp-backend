@@ -1,3 +1,4 @@
+import { AuthModule } from './../auth/auth.module';
 import { RoomRepository } from './repository/room.repository';
 import { AreaRepository } from './repository/area.repository';
 import { UsersRepository } from './../auth/repository/users.repository';
@@ -17,6 +18,7 @@ import { AnnoucementRepository } from './repository/announcement.repository';
       AreaRepository,
       RoomRepository,
     ]),
+    AuthModule,
   ],
   controllers: [OrganizationController],
   providers: [OrganizationService],
