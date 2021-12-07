@@ -5,15 +5,17 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { User } from 'src/auth/user.entity';
 import { Company } from 'src/company/company.entity';
 
 @Entity()
-export class User {
+export class Branch {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -21,20 +23,14 @@ export class User {
   name: string;
 
   @Column()
-  @Exclude({ toPlainOnly: true })
-  password: string;
+  address: string;
 
-  @Column({ unique: true })
-  email: string;
-
-  @Column()
-  email_verified: boolean;
-
-  @OneToOne(() => Company, (company) => company.owner)
-  @JoinColumn()
+  @ManyToOne(() => Company, (company) => company.branches, {
+    onDelete: 'SET NULL',
+  })
   company: Company;
 
-  @OneToMany(() => UserBranchesBranch, (branch) => branch.user)
+  @OneToMany(() => UserBranchesBranch, (user) => user.branch)
   @JoinColumn()
-  branches: UserBranchesBranch[];
+  user: UserBranchesBranch[];
 }

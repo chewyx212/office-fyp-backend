@@ -1,5 +1,4 @@
-import { UserRole } from './../user.entity';
-import { SignUpDto } from './../dto/auth.dto';
+import { SignUpDto } from './dto/auth.dto';
 import { User } from 'src/auth/user.entity';
 
 import { EntityRepository, Repository } from 'typeorm';
@@ -11,7 +10,7 @@ import * as bcrypt from 'bcrypt';
 
 @EntityRepository(User)
 export class UsersRepository extends Repository<User> {
-  async createUser(signUpDto: SignUpDto, role: UserRole): Promise<void> {
+  async createUser(signUpDto: SignUpDto): Promise<void> {
     const { email, name, password } = signUpDto;
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -20,13 +19,15 @@ export class UsersRepository extends Repository<User> {
       name,
       password: hashedPassword,
       email_verified: true,
-      role: [role],
     });
     console.log(user);
     try {
       await this.save(user);
+      console.log('inside');
     } catch (error) {
-      if (error.code === '23505') {
+      console.log(error.errno)
+      if (error.errno === 1062) {
+      console.log(error.errno);
         throw new ConflictException('Email already registered');
       } else {
         throw new InternalServerErrorException();

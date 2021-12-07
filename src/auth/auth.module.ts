@@ -1,6 +1,5 @@
-import { RolesRepository } from './repository/roles.repository';
 import { JwtStrategy } from './jwt.strategy';
-import { UsersRepository } from './repository/users.repository';
+import { UsersRepository } from './users.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -14,7 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule.register({
       secret: 'secret123',
     }),
-    TypeOrmModule.forFeature([UsersRepository, RolesRepository]),
+    TypeOrmModule.forFeature([UsersRepository]),
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
