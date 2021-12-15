@@ -22,23 +22,13 @@ export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
   @Post()
-  create(
-    @Body() createCompanyDto: CreateCompanyDto,
-    @GetUser() user: User,
-  ): Promise<Company> {
-    console.log('hetre');
-    console.log(user);
+  create(@Body() createCompanyDto: CreateCompanyDto, @GetUser() user: User) {
     return this.companyService.create(createCompanyDto, user);
   }
 
   @Get()
-  findAll(@GetUser() user: User) {
-    return this.companyService.findAll(user);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.companyService.findOne(+id);
+  find(@GetUser() user: User) {
+    return this.companyService.find(user);
   }
 
   @Patch(':id')
@@ -46,8 +36,8 @@ export class CompanyController {
     return this.companyService.update(+id, updateCompanyDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.companyService.remove(+id);
+  @Delete()
+  remove(@GetUser() user: User) {
+    return this.companyService.delete(user);
   }
 }

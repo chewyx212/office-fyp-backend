@@ -1,15 +1,34 @@
+import { BranchRepository } from './branch.repository';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateBranchDto } from './dto/create-branch.dto';
 import { UpdateBranchDto } from './dto/update-branch.dto';
+import { User } from 'src/auth/user.entity';
+import { CompanyRepository } from 'src/company/company.repository';
 
 @Injectable()
 export class BranchService {
-  create(createBranchDto: CreateBranchDto) {
-    return 'This action adds a new branch';
+  constructor(
+    @InjectRepository(BranchRepository)
+    private branchRepository: BranchRepository,
+    @InjectRepository(CompanyRepository)
+    private companyRepository: CompanyRepository,
+  ) {}
+
+  async create(user: User, createBranchDto: CreateBranchDto) {
+    const company = await this.companyRepository.getCompany(user);
+    if (company) {
+      return this.branchRepository.createBranch(company, createBranchDto);
+    }
+    return { msg: 'No Company found' };
   }
 
-  findAll() {
-    return `This action returns all branch`;
+  async findAll(user: User) {
+    const company = await this.companyRepository.getCompany(user);
+    if (company) {
+      return this.branchRepository.getBranch(company);
+    }
+    return { msg: 'No Company found' };
   }
 
   findOne(id: number) {
@@ -20,7 +39,7 @@ export class BranchService {
     return `This action updates a #${id} branch`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} branch`;
+  async delete(id: string) {
+    return await this.branchRepository.delete({ id });
   }
 }

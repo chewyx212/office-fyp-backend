@@ -26,6 +26,7 @@ export class Company {
   size: string;
 
   @OneToMany(() => Branch, (branch) => branch.company)
+  @JoinColumn()
   branches: Branch[];
 
   @OneToOne(() => User, (user) => user.company, { onDelete: 'SET NULL' })

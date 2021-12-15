@@ -13,23 +13,23 @@ export class CompanyService {
     private companyRepo: CompanyRepository,
   ) {}
 
-  create(createCompanyDto: CreateCompanyDto, user: User): Promise<Company> {
+  async create(createCompanyDto: CreateCompanyDto, user: User) {
+    if (await this.companyRepo.getCompany(user)) {
+      return { status: 123, msg: 'User already owned a company' };
+    }
     return this.companyRepo.createCompany(createCompanyDto, user);
   }
 
-  findAll(user: User): Promise<Company[]> {
+  find(user: User): Promise<Company> {
     return this.companyRepo.getCompany(user);
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} company`;
   }
 
   update(id: number, updateCompanyDto: UpdateCompanyDto) {
     return `This action updates a #${id} company`;
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+  delete(user: User) {
+    const deletedCompany = this.companyRepo.getCompany(user);
+    this.companyRepo.delete({ owner: user });
+    return deletedCompany;
   }
 }

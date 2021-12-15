@@ -28,9 +28,10 @@ export class Branch {
   @ManyToOne(() => Company, (company) => company.branches, {
     onDelete: 'SET NULL',
   })
+  @JoinColumn()
   company: Company;
 
   @OneToMany(() => UserBranchesBranch, (user) => user.branch)
   @JoinColumn()
-  user: UserBranchesBranch[];
+  users: UserBranchesBranch[];
 }

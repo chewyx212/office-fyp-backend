@@ -13,9 +13,11 @@ export class UserBranchesBranch {
   @PrimaryGeneratedColumn()
   id: number;
   @ManyToOne(() => User, (user) => user.branches, { onDelete: 'CASCADE' })
+  @JoinColumn()
   user: User;
 
-  @ManyToOne(() => Branch, (branch) => branch.user, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Branch, (branch) => branch.users, { onDelete: 'CASCADE' })
+  @JoinColumn()
   branch: Branch;
 
   @Column()

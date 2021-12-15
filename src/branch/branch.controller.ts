@@ -1,20 +1,33 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { User } from 'src/auth/user.entity';
+import { AuthGuard } from '@nestjs/passport';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { BranchService } from './branch.service';
 import { CreateBranchDto } from './dto/create-branch.dto';
 import { UpdateBranchDto } from './dto/update-branch.dto';
+import { GetUser } from 'src/auth/get-user.decorator';
 
+@UseGuards(AuthGuard())
 @Controller('branch')
 export class BranchController {
   constructor(private readonly branchService: BranchService) {}
 
   @Post()
-  create(@Body() createBranchDto: CreateBranchDto) {
-    return this.branchService.create(createBranchDto);
+  create(@Body() createBranchDto: CreateBranchDto, @GetUser() user: User) {
+    return this.branchService.create(user, createBranchDto);
   }
 
   @Get()
-  findAll() {
-    return this.branchService.findAll();
+  findAll(@GetUser() user: User) {
+    return this.branchService.findAll(user);
   }
 
   @Get(':id')
@@ -28,7 +41,7 @@ export class BranchController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.branchService.remove(+id);
+  delete(@Param('id') id: string) {
+    return this.branchService.delete(id);
   }
 }

@@ -1,30 +1,29 @@
-import { CreateCompanyDto } from './dto/create-company.dto';
-
 import { User } from 'src/auth/user.entity';
 
 import { EntityRepository, Repository } from 'typeorm';
-import { Company } from './company.entity';
 import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { CreateBranchDto } from './dto/create-branch.dto';
+import { Branch } from './branch.entity';
+import { Company } from 'src/company/company.entity';
 
-@EntityRepository(Company)
-export class CompanyRepository extends Repository<Company> {
-  async createCompany(
-    createCompanyDto: CreateCompanyDto,
-    user: User,
-  ): Promise<Company> {
+@EntityRepository(Branch)
+export class BranchRepository extends Repository<Branch> {
+  async createBranch(
+    company: Company,
+    createBranchDto: CreateBranchDto,
+  ): Promise<Branch> {
     console.log('inisidesssssssss');
-    const { email, name, size } = createCompanyDto;
-    const company = this.create({
-      email,
+    const { name, address } = createBranchDto;
+    const branch = this.create({
       name,
-      size,
-      owner: user,
+      address,
+      company,
     });
     try {
-      await this.save(company);
+      await this.save(branch);
     } catch (error) {
       if (error.errno === 1062) {
         throw new ConflictException('Email already registered');
@@ -32,13 +31,13 @@ export class CompanyRepository extends Repository<Company> {
         throw new InternalServerErrorException();
       }
     }
-    return company;
+    return branch;
   }
-  async getCompany(owner: User): Promise<Company> {
+  async getBranch(company: Company): Promise<Branch[]> {
     // const { status, search } = filterDto;
 
     const query = this.createQueryBuilder('company');
-    query.where({ owner });
+    query.where({ company });
 
     // if (status) {
     //   query.andWhere('task.status = :status', { status });
@@ -52,8 +51,8 @@ export class CompanyRepository extends Repository<Company> {
     // }
 
     try {
-      const company = await query.getOne();
-      return company;
+      const branches = await query.getMany();
+      return branches;
     } catch (error) {
       // this.logger.error(
       //   `Failed to get tasks for user "${
