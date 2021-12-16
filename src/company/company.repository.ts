@@ -53,7 +53,9 @@ export class CompanyRepository extends Repository<Company> {
 
     try {
       const company = await query.getOne();
-      return company;
+      if (company) {
+        return company;
+      } else throw new ConflictException('Company No Found')
     } catch (error) {
       // this.logger.error(
       //   `Failed to get tasks for user "${
