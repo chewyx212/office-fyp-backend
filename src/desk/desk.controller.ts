@@ -1,20 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 import { DeskService } from './desk.service';
 import { CreateDeskDto } from './dto/create-desk.dto';
+import { FindDeskDto } from './dto/find-desk.dto';
 import { UpdateDeskDto } from './dto/update-desk.dto';
 
+@UseGuards(AuthGuard())
 @Controller('desk')
 export class DeskController {
   constructor(private readonly deskService: DeskService) {}
 
   @Post()
-  create(@Body() createDeskDto: CreateDeskDto) {
-    return this.deskService.create(createDeskDto);
+  create(@GetUser() user: User, @Body() createDeskDto: CreateDeskDto) {
+    return this.deskService.create(user, createDeskDto);
   }
 
   @Get()
-  findAll() {
-    return this.deskService.findAll();
+  findAll(@GetUser() user: User, @Body() findDeskDto: FindDeskDto) {
+    return this.deskService.findAll(user, findDeskDto);
   }
 
   @Get(':id')

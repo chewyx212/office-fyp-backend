@@ -1,20 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { User } from './../auth/user.entity';
+import { FindRoomDto } from './dto/find-room.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
 
+@UseGuards(AuthGuard())
 @Controller('room')
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
   @Post()
-  create(@Body() createRoomDto: CreateRoomDto) {
-    return this.roomService.create(createRoomDto);
+  create(@GetUser() user: User, @Body() createRoomDto: CreateRoomDto) {
+    return this.roomService.create(user, createRoomDto);
   }
 
   @Get()
-  findAll() {
-    return this.roomService.findAll();
+  findAll(@GetUser() user: User, @Body() findRoomDto: FindRoomDto) {
+    return this.roomService.findAll(user, findRoomDto);
   }
 
   @Get(':id')

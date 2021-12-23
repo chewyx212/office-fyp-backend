@@ -1,3 +1,4 @@
+import { Area } from 'src/area/area.entity';
 import {
   Column,
   Entity,
@@ -9,11 +10,9 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Branch } from 'src/branch/branch.entity';
-import { Desk } from 'src/desk/desk.entity';
 
 @Entity()
-export class Area {
+export class Desk {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -23,11 +22,7 @@ export class Area {
   @Column()
   status: boolean;
 
-  @ManyToOne(() => Branch, (branch) => branch.areas)
+  @ManyToOne(() => Area, (area) => area.desks)
   @JoinColumn()
-  branch: Branch;
-
-  @OneToMany(() => Desk, (desk) => desk.area)
-  @JoinColumn()
-  desks: Desk[];
+  area: Area;
 }

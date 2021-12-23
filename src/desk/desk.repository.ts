@@ -1,0 +1,30 @@
+import { CreateDeskDto } from './dto/create-desk.dto';
+import { EntityRepository, Repository } from 'typeorm';
+import {
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { Desk } from './desk.entity';
+import { Area } from 'src/area/area.entity';
+
+@EntityRepository(Desk)
+export class DeskRepository extends Repository<Desk> {
+  async createDesk(area: Area, createDeskDto: CreateDeskDto): Promise<Desk> {
+    const { name, status } = createDeskDto;
+    const desk = this.create({
+      name,
+      status,
+      area,
+    });
+    try {
+      await this.save(desk);
+    } catch (error) {
+      if (error.errno === 1062) {
+        throw new ConflictException('already registered');
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
+    return desk;
+  }
+}

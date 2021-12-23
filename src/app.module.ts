@@ -1,3 +1,4 @@
+import { DeskSchedule } from './desk-schedule/desk-schedule.entity';
 import { Announcement } from './announcement/announcement.entity';
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
@@ -16,6 +17,8 @@ import { DeskModule } from './desk/desk.module';
 import { AnnouncementModule } from './announcement/announcement.module';
 import { Area } from './area/area.entity';
 import { Room } from './room/room.entity';
+import { DeskScheduleModule } from './desk-schedule/desk-schedule.module';
+import { Desk } from './desk/desk.entity';
 
 @Module({
   imports: [
@@ -33,6 +36,8 @@ import { Room } from './room/room.entity';
         UserBranchesBranch,
         Branch,
         Area,
+        Desk,
+        DeskSchedule,
         Room,
         Announcement,
       ],
@@ -46,6 +51,7 @@ import { Room } from './room/room.entity';
     RoomModule,
     DeskModule,
     AnnouncementModule,
+    DeskScheduleModule,
   ],
 })
 export class AppModule {}
