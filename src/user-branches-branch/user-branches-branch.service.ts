@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { User } from 'src/auth/user.entity';
@@ -31,7 +32,7 @@ export class UserBranchesBranchService {
     const branch = await this.branchRepository.findOne({
       id: branchId,
     });
-
+    console.log('aaaaaaaaaaa');
     const targetUser = await this.usersRepository.findOne({ email });
     if (branch && targetUser) {
       const adminUser = await this.userBranchesBranchRepository.findOne({
@@ -71,27 +72,30 @@ export class UserBranchesBranchService {
     const { email, branchId } = createBranchUserDto;
     const company = await this.companyRepository.findOne({ owner: user });
     const targetUser = await this.usersRepository.findOne({ email });
-    if (company) {
-      if (targetUser) {
-        const branch = await this.branchRepository.findOne({
-          company,
-          id: branchId,
-        });
-        console.log(branch);
-        if (branch) {
-          return this.userBranchesBranchRepository.createBranchUser(
-            targetUser,
-            branch,
-            true,
-          );
-        } else {
-          return new ConflictException('No Branch found!');
-        }
-      } else {
-        return new ConflictException('No User Found!');
-      }
+    if (!company) {
+      throw new NotFoundException('No Company Found!');
+    }
+    if (!targetUser) {
+      throw new NotFoundException('No User Found!');
+    }
+    const branch = await this.branchRepository.findOne({
+      company,
+      id: branchId,
+    });
+    if (branch) {
+      return this.userBranchesBranchRepository.createBranchUser(
+        targetUser,
+        branch,
+        true,
+      );
     } else {
-      return new ConflictException('No Company FOund!');
+      const isExisted = await this.branchRepository.findOne({
+        id: branchId,
+      });
+      if (isExisted) {
+        throw new NotFoundException('No permission to access this Branch!');
+      }
+      throw new NotFoundException('No Branch found!');
     }
   }
 

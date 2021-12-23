@@ -1,3 +1,4 @@
+import { Announcement } from './announcement/announcement.entity';
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +10,12 @@ import { User } from './auth/user.entity';
 import { Company } from './company/company.entity';
 import { UserBranchesBranch } from './user-branches-branch/user-branches-branch.entity';
 import { Branch } from './branch/branch.entity';
+import { AreaModule } from './area/area.module';
+import { RoomModule } from './room/room.module';
+import { DeskModule } from './desk/desk.module';
+import { AnnouncementModule } from './announcement/announcement.module';
+import { Area } from './area/area.entity';
+import { Room } from './room/room.entity';
 
 @Module({
   imports: [
@@ -20,13 +27,25 @@ import { Branch } from './branch/branch.entity';
       username: 'root',
       password: 'abcd1234',
       database: 'spaceb',
-      entities: [User, Company, UserBranchesBranch, Branch],
+      entities: [
+        User,
+        Company,
+        UserBranchesBranch,
+        Branch,
+        Area,
+        Room,
+        Announcement,
+      ],
       autoLoadEntities: true,
       synchronize: true,
     }),
     CompanyModule,
     BranchModule,
     UserBranchesBranchModule,
+    AreaModule,
+    RoomModule,
+    DeskModule,
+    AnnouncementModule,
   ],
 })
 export class AppModule {}

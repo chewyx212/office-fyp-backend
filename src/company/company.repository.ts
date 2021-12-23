@@ -15,7 +15,6 @@ export class CompanyRepository extends Repository<Company> {
     createCompanyDto: CreateCompanyDto,
     user: User,
   ): Promise<Company> {
-    console.log('inisidesssssssss');
     const { email, name, size } = createCompanyDto;
     const company = this.create({
       email,
@@ -53,9 +52,11 @@ export class CompanyRepository extends Repository<Company> {
 
     try {
       const company = await query.getOne();
+      console.log('herererererer');
+      console.log(company);
       if (company) {
-        return company;
-      } else throw new ConflictException('Company No Found')
+        return company
+      }
     } catch (error) {
       // this.logger.error(
       //   `Failed to get tasks for user "${

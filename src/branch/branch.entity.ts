@@ -1,4 +1,3 @@
-import { UserBranchesBranch } from '../user-branches-branch/user-branches-branch.entity';
 import {
   Column,
   Entity,
@@ -13,6 +12,10 @@ import {
 import { Exclude } from 'class-transformer';
 import { User } from 'src/auth/user.entity';
 import { Company } from 'src/company/company.entity';
+import { Area } from 'src/area/area.entity';
+import { Room } from 'src/room/room.entity';
+import { Announcement } from 'src/announcement/announcement.entity';
+import { UserBranchesBranch } from 'src/user-branches-branch/user-branches-branch.entity';
 
 @Entity()
 export class Branch {
@@ -34,4 +37,16 @@ export class Branch {
   @OneToMany(() => UserBranchesBranch, (user) => user.branch)
   @JoinColumn()
   users: UserBranchesBranch[];
+
+  @OneToMany(() => Announcement, (announcement) => announcement.branch)
+  @JoinColumn()
+  announcements: Announcement[];
+
+  @OneToMany(() => Area, (area) => area.branch)
+  @JoinColumn()
+  areas: Area[];
+
+  @OneToMany(() => Room, (room) => room.branch)
+  @JoinColumn()
+  rooms: Room[];
 }

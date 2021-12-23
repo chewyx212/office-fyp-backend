@@ -20,14 +20,10 @@ export class UsersRepository extends Repository<User> {
       password: hashedPassword,
       email_verified: true,
     });
-    console.log(user);
     try {
       await this.save(user);
-      console.log('inside');
     } catch (error) {
-      console.log(error.errno)
       if (error.errno === 1062) {
-      console.log(error.errno);
         throw new ConflictException('Email already registered');
       } else {
         throw new InternalServerErrorException();

@@ -20,7 +20,7 @@ export class CompanyService {
     return this.companyRepo.createCompany(createCompanyDto, user);
   }
 
-  find(user: User): Promise<Company> {
+  find(user: User) {
     return this.companyRepo.getCompany(user);
   }
 
