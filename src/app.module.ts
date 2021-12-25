@@ -40,6 +40,7 @@ import { Desk } from './desk/desk.entity';
         DeskSchedule,
         Room,
         Announcement,
+        DeskSchedule,
       ],
       autoLoadEntities: true,
       synchronize: true,

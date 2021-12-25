@@ -1,3 +1,4 @@
+import { DeskSchedule } from './../desk-schedule/desk-schedule.entity';
 import { Area } from 'src/area/area.entity';
 import {
   Column,
@@ -25,4 +26,10 @@ export class Desk {
   @ManyToOne(() => Area, (area) => area.desks)
   @JoinColumn()
   area: Area;
+
+  @OneToMany(() => DeskSchedule, (schedule) => schedule.desk, {
+    eager: true,
+  })
+  @JoinColumn()
+  schedules: DeskSchedule;
 }
