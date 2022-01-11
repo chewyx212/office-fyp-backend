@@ -28,4 +28,5 @@ export class DeskSchedule {
   @ManyToOne(() => Desk, (desk) => desk.schedules)
   @JoinColumn()
   desk: Desk;
+
 }

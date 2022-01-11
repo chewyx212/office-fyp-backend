@@ -15,7 +15,6 @@ export class BranchRepository extends Repository<Branch> {
     company: Company,
     createBranchDto: CreateBranchDto,
   ): Promise<Branch> {
-    console.log('inisidesssssssss');
     const { name, address } = createBranchDto;
     const branch = this.create({
       name,

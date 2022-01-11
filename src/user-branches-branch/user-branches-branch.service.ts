@@ -32,7 +32,6 @@ export class UserBranchesBranchService {
     const branch = await this.branchRepository.findOne({
       id: branchId,
     });
-    console.log('aaaaaaaaaaa');
     const targetUser = await this.usersRepository.findOne({ email });
     if (branch && targetUser) {
       const adminUser = await this.userBranchesBranchRepository.findOne({

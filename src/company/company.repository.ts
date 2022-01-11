@@ -52,8 +52,6 @@ export class CompanyRepository extends Repository<Company> {
 
     try {
       const company = await query.getOne();
-      console.log('herererererer');
-      console.log(company);
       if (company) {
         return company
       }

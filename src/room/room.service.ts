@@ -57,8 +57,7 @@ export class RoomService {
     }
   }
 
-  async findAll(user: User, findRoomDto: FindRoomDto) {
-    const { branchId } = findRoomDto;
+  async findAll(user: User, branchId: string) {
     const branch = await this.branchRepository.findOne({ id: branchId });
     if (!branch) {
       throw new NotFoundException('Branch Not Found');

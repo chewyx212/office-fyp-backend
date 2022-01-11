@@ -7,6 +7,7 @@ import { CompanyRepository } from 'src/company/company.repository';
 import { BranchRepository } from 'src/branch/branch.repository';
 import { UserBranchesBranchRepository } from 'src/user-branches-branch/user-branches-branch.repository';
 import { AreaRepository } from './area.repository';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -17,6 +18,9 @@ import { AreaRepository } from './area.repository';
       UserBranchesBranchRepository,
     ]),
     AuthModule,
+    MulterModule.register({
+      dest: './upload/areas',
+    }),
   ],
   controllers: [AreaController],
   providers: [AreaService],

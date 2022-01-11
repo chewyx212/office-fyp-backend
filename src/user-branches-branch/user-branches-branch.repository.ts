@@ -32,7 +32,6 @@ export class UserBranchesBranchRepository extends Repository<UserBranchesBranch>
       isDuplicated.is_admin = is_admin;
       await this.save(isDuplicated);
     } else {
-      console.log(isDuplicated);
       return new ConflictException('Duplicated!');
     }
   }

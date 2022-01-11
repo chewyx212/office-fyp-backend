@@ -35,7 +35,6 @@ export class DeskService {
     if (!area) {
       throw new NotFoundException('Area not found');
     }
-    console.log(area);
     const branch = await this.branchRepository.findOne({ id: area.branch.id });
     if (!branch) {
       throw new NotFoundException('Branch Not Found');
@@ -73,7 +72,6 @@ export class DeskService {
     if (!area) {
       throw new NotFoundException('Area not found');
     }
-    console.log(area);
     const branch = await this.branchRepository.findOne({ id: area.branch.id });
     if (!branch) {
       throw new NotFoundException('Branch Not Found');

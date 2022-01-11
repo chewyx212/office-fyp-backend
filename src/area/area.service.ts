@@ -28,7 +28,7 @@ export class AreaService {
     private userBranchesBranchRepository: UserBranchesBranchRepository,
   ) {}
 
-  async create(user: User, createAreaDto: CreateAreaDto) {
+  async create(user: User, imagePath: string, createAreaDto: CreateAreaDto) {
     const { branchId } = createAreaDto;
     const branch = await this.branchRepository.findOne({ id: branchId });
     if (!branch) {
@@ -58,8 +58,7 @@ export class AreaService {
     }
   }
 
-  async findAll(user: User, findAreaDto: FindAreaDto) {
-    const { branchId } = findAreaDto;
+  async findAll(user: User, branchId: string) {
     const branch = await this.branchRepository.findOne({ id: branchId });
     if (!branch) {
       throw new NotFoundException('Branch Not Found');

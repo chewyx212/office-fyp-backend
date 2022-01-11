@@ -32,4 +32,13 @@ export class Desk {
   })
   @JoinColumn()
   schedules: DeskSchedule;
+
+  @Column()
+  xx: number;
+  @Column()
+  xy: number;
+  @Column()
+  yx: number;
+  @Column()
+  yy: number;
 }
