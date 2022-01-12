@@ -1,22 +1,23 @@
-import { UpdateRoomDto } from './dto/update-room.dto';
-import { FindRoomDto } from './dto/find-room.dto';
-import { BranchRepository } from './../branch/branch.repository';
+import { RoomSchedule } from './room-schedule.entity';
+import { RoomScheduleRepository } from './room-schedule.repositroy';
 import {
   Injectable,
-  ConflictException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CompanyRepository } from 'src/company/company.repository';
 import { User } from 'src/auth/user.entity';
+import { BranchRepository } from 'src/branch/branch.repository';
+import { CompanyRepository } from 'src/company/company.repository';
+import { RoomRepository } from 'src/room/room.repositroy';
 import { UserBranchesBranchRepository } from 'src/user-branches-branch/user-branches-branch.repository';
-import { RoomRepository } from './room.repositroy';
-import { CreateRoomDto } from './dto/create-room.dto';
+import { CreateRoomScheduleDto } from './dto/create-room-schedule.dto';
 
 @Injectable()
-export class RoomService {
+export class RoomScheduleService {
   constructor(
+    @InjectRepository(RoomScheduleRepository)
+    private roomScheduleRepository: RoomScheduleRepository,
     @InjectRepository(RoomRepository)
     private roomRepository: RoomRepository,
     @InjectRepository(CompanyRepository)
@@ -27,8 +28,8 @@ export class RoomService {
     private userBranchesBranchRepository: UserBranchesBranchRepository,
   ) {}
 
-  async create(user: User, createRoomDto: CreateRoomDto) {
-    const { branchId } = createRoomDto;
+  async create(user: User, createRoomScheduleDto: CreateRoomScheduleDto) {
+    const { branchId, roomId, duration, datetime } = createRoomScheduleDto;
     const branch = await this.branchRepository.findOne({ id: branchId });
     if (!branch) {
       throw new NotFoundException('Branch Not Found');
@@ -51,7 +52,14 @@ export class RoomService {
       }
     }
     if (gotPermission) {
-      return this.roomRepository.createRoom(branch, createRoomDto);
+      const room = await this.roomRepository.findOne({ id: roomId });
+
+      return await this.roomScheduleRepository.createRoomSchedule({
+        room,
+        user,
+        duration,
+        datetime,
+      });
     } else {
       throw new UnauthorizedException('You have no permission to create');
     }
@@ -80,21 +88,42 @@ export class RoomService {
       }
     }
     if (gotPermission) {
-      return this.roomRepository.find({ branch });
+      const rooms = await this.roomRepository.find({ branch });
+      const findRoom = async (room) => {
+        const result = await this.roomScheduleRepository.find({ room });
+        if (result && result.length > 0) {
+          return result;
+        }
+        return [];
+      };
+      let allSchedules: RoomSchedule[] = [];
+      if (rooms && rooms.length > 0) {
+        for await (const contents of rooms.map((room) => findRoom(room))) {
+          allSchedules = allSchedules.concat(contents);
+        }
+        return allSchedules;
+      }
+      console.log('outputting ,', allSchedules);
+      return ['asd'];
     } else {
       throw new UnauthorizedException('You have no permission to view');
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} room`;
+  async findOne(id: string) {
+    const room = await this.roomRepository.findOne({ id });
+    if (room) {
+      return await this.roomScheduleRepository.find({ room });
+    } else {
+      throw new NotFoundException('Room Not Found');
+    }
   }
 
-  async update(id: string, updateRoomDto: UpdateRoomDto) {
-    console.log(id);
-    console.log(updateRoomDto);
-    return await this.roomRepository.update(id, updateRoomDto);
-  }
+  //   async update(id: string, updateRoomDto: UpdateRoomDto) {
+  //     console.log(id);
+  //     console.log(updateRoomDto);
+  //     return await this.roomRepository.update(id, updateRoomDto);
+  //   }
 
   remove(id: number) {
     return `This action removes a #${id} room`;

@@ -1,4 +1,3 @@
-import { RoomSchedule } from './../room-schedule/room-schedule.entity';
 import {
   Column,
   Entity,
@@ -12,26 +11,24 @@ import {
 } from 'typeorm';
 import { User } from 'src/auth/user.entity';
 import { Branch } from 'src/branch/branch.entity';
+import { Room } from 'src/room/room.entity';
 
 @Entity()
-export class Room {
+export class RoomSchedule {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  name: string;
+  @Column('datetime', { name: 'time' })
+  datetime: Date;
 
   @Column()
-  detail: string;
+  duration: number;
 
-  @Column()
-  status: boolean;
-
-  @ManyToOne(() => Branch, (branch) => branch.rooms)
+  @ManyToOne(() => User, (user) => user.roomSchedules, { eager: true })
   @JoinColumn()
-  branch: Branch;
+  user: User;
 
-  @OneToMany(() => RoomSchedule, (schedule) => schedule.room)
+  @ManyToOne(() => Room, (room) => room.schedules, { eager: true })
   @JoinColumn()
-  schedules: RoomSchedule[];
+  room: Room;
 }

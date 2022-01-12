@@ -8,7 +8,7 @@ import {
   Param,
   Delete,
   UseGuards,
-  Query
+  Query,
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDto } from './dto/create-room.dto';
@@ -23,7 +23,7 @@ export class RoomController {
 
   @Post()
   create(@GetUser() user: User, @Body() createRoomDto: CreateRoomDto) {
-    console.log(createRoomDto)
+    console.log(createRoomDto);
     return this.roomService.create(user, createRoomDto);
   }
 
@@ -37,10 +37,10 @@ export class RoomController {
   //   return this.roomService.findOne(+id);
   // }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateRoomDto: UpdateRoomDto) {
-  //   return this.roomService.update(+id, updateRoomDto);
-  // }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateRoomDto: UpdateRoomDto) {
+    return this.roomService.update(id, updateRoomDto);
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {
