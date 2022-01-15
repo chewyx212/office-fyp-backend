@@ -34,7 +34,7 @@ export class RoomController {
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
-  //   return this.roomService.findOne(+id);
+  //   return this.roomService.findOne(id);
   // }
 
   @Patch(':id')

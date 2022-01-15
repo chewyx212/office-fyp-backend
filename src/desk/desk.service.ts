@@ -1,5 +1,9 @@
 import { DeskRepository } from './desk.repository';
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { User } from 'src/auth/user.entity';
 import { CreateDeskDto } from './dto/create-desk.dto';
 import { FindDeskDto } from './dto/find-desk.dto';
@@ -57,6 +61,7 @@ export class DeskService {
       }
     }
     if (gotPermission) {
+      console.log('got permission');
       return this.deskRepository.createDesk(area, createDeskDto);
     } else {
       throw new UnauthorizedException('You have no permission to create');

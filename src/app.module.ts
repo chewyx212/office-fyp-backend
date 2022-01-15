@@ -21,6 +21,7 @@ import { Room } from './room/room.entity';
 import { DeskScheduleModule } from './desk-schedule/desk-schedule.module';
 import { Desk } from './desk/desk.entity';
 import { RoomScheduleModule } from './room-schedule/room-schedule.module';
+import { VisitorLogModule } from './visitor-log/visitor-log.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { RoomScheduleModule } from './room-schedule/room-schedule.module';
     AnnouncementModule,
     DeskScheduleModule,
     RoomScheduleModule,
+    VisitorLogModule,
   ],
 })
 export class AppModule {}

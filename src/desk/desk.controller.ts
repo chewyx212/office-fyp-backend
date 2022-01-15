@@ -23,6 +23,7 @@ export class DeskController {
 
   @Post()
   create(@GetUser() user: User, @Body() createDeskDto: CreateDeskDto) {
+    console.log(createDeskDto)
     return this.deskService.create(user, createDeskDto);
   }
 

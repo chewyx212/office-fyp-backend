@@ -21,6 +21,9 @@ export class Area {
   name: string;
 
   @Column()
+  imagePath: string;
+
+  @Column()
   status: boolean;
 
   @ManyToOne(() => Branch, (branch) => branch.areas)

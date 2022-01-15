@@ -1,32 +1,25 @@
 import { EntityRepository, Repository } from 'typeorm';
-import {
-  ConflictException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { InternalServerErrorException } from '@nestjs/common';
 import { Area } from './area.entity';
 import { Branch } from 'src/branch/branch.entity';
-import { CreateAreaDto } from './dto/create-area.dto';
 
 @EntityRepository(Area)
 export class AreaRepository extends Repository<Area> {
   async createArea(
     branch: Branch,
-    createAreaDto: CreateAreaDto,
+    imagePath: string,
+    name: string,
   ): Promise<Area> {
-    const { name, status } = createAreaDto;
     const area = this.create({
       name,
-      status,
       branch,
+      imagePath,
+      status: true,
     });
     try {
       await this.save(area);
     } catch (error) {
-      if (error.errno === 1062) {
-        throw new ConflictException('Email already registered');
-      } else {
-        throw new InternalServerErrorException();
-      }
+      throw new InternalServerErrorException(error);
     }
     return area;
   }

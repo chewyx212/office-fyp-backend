@@ -13,7 +13,9 @@ import { CreateAreaDto } from './dto/create-area.dto';
 import { UpdateAreaDto } from './dto/update-area.dto';
 import { User } from 'src/auth/user.entity';
 import { UserBranchesBranchRepository } from 'src/user-branches-branch/user-branches-branch.repository';
-import { find } from 'rxjs';
+import { createReadStream } from 'fs';
+import { join } from 'path';
+import { StreamableFile } from '@nestjs/common';
 
 @Injectable()
 export class AreaService {
@@ -29,7 +31,7 @@ export class AreaService {
   ) {}
 
   async create(user: User, imagePath: string, createAreaDto: CreateAreaDto) {
-    const { branchId } = createAreaDto;
+    const { branchId, name } = createAreaDto;
     const branch = await this.branchRepository.findOne({ id: branchId });
     if (!branch) {
       throw new NotFoundException('Branch Not Found');
@@ -52,11 +54,21 @@ export class AreaService {
       }
     }
     if (gotPermission) {
-      return this.areaRepository.createArea(branch, createAreaDto);
+      const area = await this.areaRepository.createArea(
+        branch,
+        imagePath,
+        name,
+      );
+      return { ...area, image: this.findAreaImage(area.imagePath) };
     } else {
       throw new UnauthorizedException('You have no permission to create');
     }
   }
+
+  findAreaImage = (imagePath: string) => {
+    const file = createReadStream(join(process.cwd(), 'files/' + imagePath));
+    return new StreamableFile(file);
+  };
 
   async findAll(user: User, branchId: string) {
     const branch = await this.branchRepository.findOne({ id: branchId });
@@ -81,14 +93,23 @@ export class AreaService {
       }
     }
     if (gotPermission) {
-      return this.areaRepository.find({ branch });
+      const areas = await this.areaRepository.find({ branch });
+      return areas.map((area) => ({
+        ...area,
+        imagePath: 'http://127.0.0.1:8887/' + area.imagePath,
+        image: this.findAreaImage(area.imagePath),
+      }));
     } else {
       throw new UnauthorizedException('You have no permission to view');
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} area`;
+  async findOne(id: string) {
+    const area = await this.areaRepository.findOne({ id });
+    return {
+      ...area,
+      imagePath: 'http://127.0.0.1:8887/' + area.imagePath,
+    };
   }
 
   update(id: number, updateAreaDto: UpdateAreaDto) {

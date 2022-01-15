@@ -12,6 +12,7 @@ import {
   Query,
   UseInterceptors,
   UploadedFile,
+  NotFoundException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AreaService } from './area.service';
@@ -31,7 +32,8 @@ export class AreaController {
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: './uploads/areas',
+        destination: './files',
+        filename: editFileName,
       }),
       fileFilter: imageFileFilter,
     }),
@@ -39,34 +41,19 @@ export class AreaController {
   create(
     @UploadedFile() file: Express.Multer.File,
     @GetUser() user: User,
-    @Body() body,
+    @Body() createAreaDto: CreateAreaDto,
   ) {
-    console.log(body);
-    console.log(file);
-    if (file) {
-      console.log(file.path);
-      return file.path;
+    if (!file) {
+      throw new NotFoundException('Not File found');
     }
-    return body;
-    // return this.areaService.create(user, file.path, createAreaDto);
-  }
-
-  @Post('upload')
-  @UseInterceptors(
-    FileInterceptor('image', {
-      storage: diskStorage({
-        destination: './files',
-        filename: editFileName,
-      }),
-      fileFilter: imageFileFilter,
-    }),
-  )
-  async uploadedFile(@UploadedFile() file) {
-    const response = {
-      originalname: file.originalname,
-      filename: file.filename,
-    };
-    return response;
+    // const response = {
+    //   name: createAreaDto.name,
+    //   originalname: file.originalname,
+    //   filename: file.filename,
+    //   filepath: file.path,
+    // };
+    // return response;
+    return this.areaService.create(user, file.filename, createAreaDto);
   }
 
   @Get()
@@ -76,7 +63,7 @@ export class AreaController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.areaService.findOne(+id);
+    return this.areaService.findOne(id);
   }
 
   @Patch(':id')

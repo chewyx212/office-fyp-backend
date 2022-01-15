@@ -9,7 +9,4 @@ export class CreateAreaDto {
   @IsNotEmpty()
   name: string;
 
-  @IsBoolean()
-  @IsNotEmpty()
-  status: boolean;
 }
