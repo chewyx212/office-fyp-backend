@@ -36,7 +36,10 @@ export class CompanyRepository extends Repository<Company> {
   async getCompany(owner: User): Promise<Company> {
     // const { status, search } = filterDto;
 
-    const query = this.createQueryBuilder('company');
+    const query = this.createQueryBuilder('company').leftJoinAndSelect(
+      'company.branches',
+      'branches',
+    );
     query.where({ owner });
 
     // if (status) {

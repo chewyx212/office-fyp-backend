@@ -1,3 +1,4 @@
+import { User } from './user.entity';
 import { JwtPayload } from './jwt-payload.interface';
 import { SignInPayload } from './payload.interface';
 import { SignUpDto, SignInDto } from './dto/auth.dto';
@@ -6,12 +7,15 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { BranchRepository } from 'src/branch/branch.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UsersRepository)
     private userRepo: UsersRepository,
+    @InjectRepository(BranchRepository)
+    private branchRepository: BranchRepository,
     private jwtService: JwtService,
   ) {}
 
@@ -30,5 +34,19 @@ export class AuthService {
     } else {
       throw new UnauthorizedException('Pleace check your login credential');
     }
+  }
+
+  async getDetail(user: User) {
+    const result = await this.userRepo.findOneOrFail({
+      where: user,
+      relations: ['company', 'branches', 'deskSchedules', 'roomSchedules'],
+    });
+    if (result.company) {
+      result.company.branches = await this.branchRepository.find({
+        company: result.company,
+      });
+    }
+    console.log(result.company.branches);
+    return result;
   }
 }

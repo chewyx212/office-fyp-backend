@@ -32,7 +32,7 @@ export class User {
   @Column()
   email_verified: boolean;
 
-  @OneToOne(() => Company, (company) => company.owner)
+  @OneToOne(() => Company, (company) => company.owner, { eager: true })
   @JoinColumn()
   company: Company;
 
