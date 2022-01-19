@@ -109,6 +109,7 @@ export class AreaService {
     return {
       ...area,
       imagePath: 'http://127.0.0.1:8887/' + area.imagePath,
+      image: area.imagePath,
     };
   }
 

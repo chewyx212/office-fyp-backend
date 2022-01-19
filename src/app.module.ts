@@ -22,6 +22,8 @@ import { DeskScheduleModule } from './desk-schedule/desk-schedule.module';
 import { Desk } from './desk/desk.entity';
 import { RoomScheduleModule } from './room-schedule/room-schedule.module';
 import { VisitorLogModule } from './visitor-log/visitor-log.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -58,6 +60,10 @@ import { VisitorLogModule } from './visitor-log/visitor-log.module';
     DeskScheduleModule,
     RoomScheduleModule,
     VisitorLogModule,
+
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'files'),
+    // }),
   ],
 })
 export class AppModule {}
