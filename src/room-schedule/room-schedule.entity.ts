@@ -18,11 +18,13 @@ export class RoomSchedule {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('datetime', { name: 'time' })
-  datetime: Date;
+  @Column('date')
+  date: Date;
 
   @Column()
-  duration: number;
+  startTime: number;
+  @Column()
+  endTime: number;
 
   @ManyToOne(() => User, (user) => user.roomSchedules, { eager: true })
   @JoinColumn()

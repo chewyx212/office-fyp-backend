@@ -17,9 +17,13 @@ export class CreateRoomScheduleDto {
 
   @IsDateString()
   @IsNotEmpty()
-  datetime: Date;
+  date: Date;
 
   @IsNumber()
   @IsNotEmpty()
-  duration: number;
+  startTime: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  endTime: number;
 }

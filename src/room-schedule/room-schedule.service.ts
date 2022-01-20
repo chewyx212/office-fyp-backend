@@ -29,7 +29,8 @@ export class RoomScheduleService {
   ) {}
 
   async create(user: User, createRoomScheduleDto: CreateRoomScheduleDto) {
-    const { branchId, roomId, duration, datetime } = createRoomScheduleDto;
+    const { branchId, roomId, startTime, endTime, date } =
+      createRoomScheduleDto;
     const branch = await this.branchRepository.findOne({ id: branchId });
     if (!branch) {
       throw new NotFoundException('Branch Not Found');
@@ -52,13 +53,15 @@ export class RoomScheduleService {
       }
     }
     if (gotPermission) {
+      console.log('insideeefsdfsdffgsdg');
       const room = await this.roomRepository.findOne({ id: roomId });
 
       return await this.roomScheduleRepository.createRoomSchedule({
         room,
         user,
-        duration,
-        datetime,
+        startTime,
+        endTime,
+        date,
       });
     } else {
       throw new UnauthorizedException('You have no permission to create');
@@ -91,6 +94,50 @@ export class RoomScheduleService {
       const rooms = await this.roomRepository.find({ branch });
       const findRoom = async (room) => {
         const result = await this.roomScheduleRepository.find({ room });
+        if (result && result.length > 0) {
+          return result;
+        }
+        return [];
+      };
+      let allSchedules: RoomSchedule[] = [];
+      if (rooms && rooms.length > 0) {
+        for await (const contents of rooms.map((room) => findRoom(room))) {
+          allSchedules = allSchedules.concat(contents);
+        }
+        return allSchedules;
+      }
+      console.log('outputting ,', allSchedules);
+      return ['asd'];
+    } else {
+      throw new UnauthorizedException('You have no permission to view');
+    }
+  }
+  async findAllUser(user: User, branchId: string) {
+    const branch = await this.branchRepository.findOne({ id: branchId });
+    if (!branch) {
+      throw new NotFoundException('Branch Not Found');
+    }
+    const checkAdmin = await this.userBranchesBranchRepository.findOne({
+      user,
+      branch,
+    });
+    let gotPermission = checkAdmin && checkAdmin.is_admin;
+    if (!checkAdmin || !checkAdmin.is_admin) {
+      const company = await this.companyRepository.getCompany(user);
+      if (company) {
+        const isExisted = await this.branchRepository.findOne({
+          id: branchId,
+          company,
+        });
+        if (isExisted) {
+          gotPermission = true;
+        }
+      }
+    }
+    if (gotPermission) {
+      const rooms = await this.roomRepository.find({ branch });
+      const findRoom = async (room) => {
+        const result = await this.roomScheduleRepository.find({ room, user });
         if (result && result.length > 0) {
           return result;
         }

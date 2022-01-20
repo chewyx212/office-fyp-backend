@@ -86,8 +86,12 @@ export class RoomService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} room`;
+  async findOne(id: string) {
+    console.log('inside');
+    return await this.roomRepository.findOne({
+      where: { id: id },
+      relations: ['schedules'],
+    });
   }
 
   async update(id: string, updateRoomDto: UpdateRoomDto) {
