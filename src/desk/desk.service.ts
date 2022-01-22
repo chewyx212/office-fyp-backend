@@ -109,6 +109,7 @@ export class DeskService {
   findOne(id: string) {
     return this.deskRepository.findOne({
       where: { id: id },
+      relations: ['schedules'],
     });
   }
 

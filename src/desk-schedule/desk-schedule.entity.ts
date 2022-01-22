@@ -25,7 +25,7 @@ export class DeskSchedule {
   @JoinColumn()
   user: User;
 
-  @ManyToOne(() => Desk, (desk) => desk.schedules)
+  @ManyToOne(() => Desk, (desk) => desk.schedules, { eager: true })
   @JoinColumn()
   desk: Desk;
 }

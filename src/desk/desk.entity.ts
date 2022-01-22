@@ -34,13 +34,13 @@ export class Desk {
   @Column('decimal', { precision: 5, scale: 2 })
   lng: number;
 
-  @ManyToOne(() => Area, (area) => area.desks)
+  @ManyToOne(() => Area, (area) => area.desks, {
+    eager: true,
+  })
   @JoinColumn()
   area: Area;
 
-  @OneToMany(() => DeskSchedule, (schedule) => schedule.desk, {
-    eager: true,
-  })
+  @OneToMany(() => DeskSchedule, (schedule) => schedule.desk)
   @JoinColumn()
   schedules: DeskSchedule;
 }
