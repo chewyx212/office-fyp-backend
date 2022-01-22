@@ -5,12 +5,18 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { CompanyRepository } from 'src/company/company.repository';
 import { Company } from './company.entity';
+import { UsersRepository } from 'src/auth/users.repository';
+import { BranchRepository } from 'src/branch/branch.repository';
 
 @Injectable()
 export class CompanyService {
   constructor(
     @InjectRepository(CompanyRepository)
     private companyRepo: CompanyRepository,
+    @InjectRepository(UsersRepository)
+    private userRepository: UsersRepository,
+    @InjectRepository(BranchRepository)
+    private branchRepository: BranchRepository,
   ) {}
 
   async create(createCompanyDto: CreateCompanyDto, user: User) {
@@ -31,5 +37,19 @@ export class CompanyService {
     const deletedCompany = this.companyRepo.getCompany(user);
     this.companyRepo.delete({ owner: user });
     return deletedCompany;
+  }
+
+  async getDetail(user: User) {
+    console.log(user);
+    const result = await this.userRepository.findOne({
+      where: user,
+      relations: ['company', 'branches', 'deskSchedules', 'roomSchedules'],
+    });
+    if (result.company) {
+      result.company.branches = await this.branchRepository.find({
+        company: result.company,
+      });
+    }
+    return result;
   }
 }

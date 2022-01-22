@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UserBranchesBranchService } from './user-branches-branch.service';
 import { CreateBranchUserDto } from './dto/create-user-branches-branch.dto';
@@ -15,8 +16,8 @@ import { UpdateUserBranchesBranchDto } from './dto/update-user-branches-branch.d
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 
-@Controller('user-branch')
 @UseGuards(AuthGuard())
+@Controller('user-branch')
 export class UserBranchesBranchController {
   constructor(
     private readonly userBranchesBranchService: UserBranchesBranchService,
@@ -43,9 +44,9 @@ export class UserBranchesBranchController {
     );
   }
 
-  @Get()
-  findAll() {
-    return this.userBranchesBranchService.findAll();
+  @Get('/branch')
+  findAll(@Query() { branchId }: { branchId: string }) {
+    return this.userBranchesBranchService.findAll(branchId);
   }
 
   @Get(':id')

@@ -18,8 +18,4 @@ export class AuthController {
     return this.authService.signIn(signInDto);
   }
 
-  @Get('/detail')
-  GetUserDetail(@GetUser() user: User){
-    return this.authService.getDetail(user);
-  }
 }

@@ -36,17 +36,4 @@ export class AuthService {
     }
   }
 
-  async getDetail(user: User) {
-    const result = await this.userRepo.findOneOrFail({
-      where: user,
-      relations: ['company', 'branches', 'deskSchedules', 'roomSchedules'],
-    });
-    if (result.company) {
-      result.company.branches = await this.branchRepository.find({
-        company: result.company,
-      });
-    }
-    console.log(result.company.branches);
-    return result;
-  }
 }

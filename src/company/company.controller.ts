@@ -40,4 +40,8 @@ export class CompanyController {
   remove(@GetUser() user: User) {
     return this.companyService.delete(user);
   }
+  @Get('/detail')
+  GetUserDetail(@GetUser() user: User) {
+    return this.companyService.getDetail(user);
+  }
 }

@@ -98,8 +98,12 @@ export class UserBranchesBranchService {
     }
   }
 
-  findAll() {
-    return `This action returns all userBranchesBranch`;
+  async findAll(branchId: string) {
+    const branch = await this.branchRepository.findOne({ id: branchId });
+    return await this.userBranchesBranchRepository.find({
+      where: { branch },
+      relations: ['user'],
+    });
   }
 
   findOne(id: number) {
