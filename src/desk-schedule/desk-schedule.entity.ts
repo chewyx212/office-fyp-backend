@@ -18,8 +18,8 @@ export class DeskSchedule {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  status: boolean;
+  @Column('date')
+  date: Date;
 
   @ManyToOne(() => User, (user) => user.deskSchedules)
   @JoinColumn()
@@ -28,5 +28,4 @@ export class DeskSchedule {
   @ManyToOne(() => Desk, (desk) => desk.schedules)
   @JoinColumn()
   desk: Desk;
-
 }

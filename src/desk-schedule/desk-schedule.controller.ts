@@ -1,34 +1,44 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { DeskScheduleService } from './desk-schedule.service';
 import { CreateDeskScheduleDto } from './dto/create-desk-schedule.dto';
 import { UpdateDeskScheduleDto } from './dto/update-desk-schedule.dto';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 
+@UseGuards(AuthGuard())
 @Controller('desk-schedule')
 export class DeskScheduleController {
   constructor(private readonly deskScheduleService: DeskScheduleService) {}
 
   @Post()
-  create(@Body() createDeskScheduleDto: CreateDeskScheduleDto) {
-    return this.deskScheduleService.create(createDeskScheduleDto);
+  create(
+    @GetUser() user: User,
+    @Body() createDeskScheduleDto: CreateDeskScheduleDto,
+  ) {
+    return this.deskScheduleService.create(user, createDeskScheduleDto);
   }
 
-  @Get()
-  findAll() {
-    return this.deskScheduleService.findAll();
-  }
+  // @Get()
+  // findAll(@GetUser() user: User, @Query() { deskId }: { deskId: string }) {
+  //   return this.deskScheduleService.findAll(user, deskId);
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.deskScheduleService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDeskScheduleDto: UpdateDeskScheduleDto) {
-    return this.deskScheduleService.update(+id, updateDeskScheduleDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.deskScheduleService.remove(+id);
-  }
+  // @Get('/user')
+  // findAllUser(
+  //   @GetUser() user: User,
+  //   @Query() { branchId }: { branchId: string },
+  // ) {
+  //   return this.deskScheduleService.findAllUser(user, branchId);
+  // }
 }

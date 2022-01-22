@@ -53,7 +53,6 @@ export class RoomScheduleService {
       }
     }
     if (gotPermission) {
-      console.log('insideeefsdfsdffgsdg');
       const room = await this.roomRepository.findOne({ id: roomId });
 
       return await this.roomScheduleRepository.createRoomSchedule({

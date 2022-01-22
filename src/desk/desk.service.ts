@@ -106,8 +106,10 @@ export class DeskService {
     return `This action returns all desk`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} desk`;
+  findOne(id: string) {
+    return this.deskRepository.findOne({
+      where: { id: id },
+    });
   }
 
   update(id: number, updateDeskDto: UpdateDeskDto) {

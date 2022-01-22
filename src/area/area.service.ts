@@ -1,3 +1,4 @@
+import { DeskRepository } from './../desk/desk.repository';
 import { FindAreaDto } from './dto/find-area.dto';
 import { BranchRepository } from './../branch/branch.repository';
 import {
@@ -105,7 +106,10 @@ export class AreaService {
   }
 
   async findOne(id: string) {
-    const area = await this.areaRepository.findOne({ id });
+    const area = await this.areaRepository.findOne({
+      where: { id: id },
+      relations: ['desks'],
+    });
     return {
       ...area,
       imagePath: 'http://127.0.0.1:8887/' + area.imagePath,

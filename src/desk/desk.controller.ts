@@ -34,7 +34,7 @@ export class DeskController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.deskService.findOne(+id);
+    return this.deskService.findOne(id);
   }
 
   @Patch(':id')

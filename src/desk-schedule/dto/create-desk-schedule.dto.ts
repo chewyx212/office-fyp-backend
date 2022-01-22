@@ -1,11 +1,11 @@
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsNumber, IsDateString, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateDeskScheduleDto {
   @IsString()
   @IsNotEmpty()
   deskId: string;
 
-  @IsString()
+  @IsDateString()
   @IsNotEmpty()
-  date: string;
+  date: Date;
 }
