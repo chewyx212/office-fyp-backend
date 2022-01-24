@@ -16,6 +16,7 @@ import { Area } from 'src/area/area.entity';
 import { Room } from 'src/room/room.entity';
 import { Announcement } from 'src/announcement/announcement.entity';
 import { UserBranchesBranch } from 'src/user-branches-branch/user-branches-branch.entity';
+import { VisitorLog } from 'src/visitor-log/visitor-log.entity';
 
 @Entity()
 export class Branch {
@@ -49,4 +50,8 @@ export class Branch {
   @OneToMany(() => Room, (room) => room.branch)
   @JoinColumn()
   rooms: Room[];
+
+  @OneToMany(() => VisitorLog, (visitors) => visitors.branch)
+  @JoinColumn()
+  visitors: VisitorLog[];
 }

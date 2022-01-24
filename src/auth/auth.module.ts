@@ -6,7 +6,6 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { BranchRepository } from 'src/branch/branch.repository';
 
 @Module({
   imports: [
@@ -14,7 +13,7 @@ import { BranchRepository } from 'src/branch/branch.repository';
     JwtModule.register({
       secret: 'secret123',
     }),
-    TypeOrmModule.forFeature([UsersRepository, BranchRepository]),
+    TypeOrmModule.forFeature([UsersRepository]),
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],

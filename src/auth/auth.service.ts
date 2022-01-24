@@ -7,15 +7,12 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { BranchRepository } from 'src/branch/branch.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UsersRepository)
     private userRepo: UsersRepository,
-    @InjectRepository(BranchRepository)
-    private branchRepository: BranchRepository,
     private jwtService: JwtService,
   ) {}
 
@@ -35,5 +32,4 @@ export class AuthService {
       throw new UnauthorizedException('Pleace check your login credential');
     }
   }
-
 }

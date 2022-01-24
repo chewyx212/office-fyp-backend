@@ -1,3 +1,4 @@
+import { VisitorLog } from './../visitor-log/visitor-log.entity';
 import { RoomSchedule } from './../room-schedule/room-schedule.entity';
 import { DeskSchedule } from './../desk-schedule/desk-schedule.entity';
 import { UserBranchesBranch } from '../user-branches-branch/user-branches-branch.entity';
@@ -47,4 +48,8 @@ export class User {
   @OneToMany(() => RoomSchedule, (roomSchedule) => roomSchedule.user)
   @JoinColumn()
   roomSchedules: RoomSchedule[];
+
+  @OneToMany(() => VisitorLog, (checkin) => checkin.user)
+  @JoinColumn()
+  checkins: VisitorLog[];
 }

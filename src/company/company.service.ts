@@ -45,6 +45,7 @@ export class CompanyService {
       where: user,
       relations: ['company', 'branches', 'deskSchedules', 'roomSchedules'],
     });
+    result.company = await this.companyRepo.getCompany(user);
     if (result.company) {
       result.company.branches = await this.branchRepository.find({
         company: result.company,

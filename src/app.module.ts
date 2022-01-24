@@ -22,8 +22,7 @@ import { DeskScheduleModule } from './desk-schedule/desk-schedule.module';
 import { Desk } from './desk/desk.entity';
 import { RoomScheduleModule } from './room-schedule/room-schedule.module';
 import { VisitorLogModule } from './visitor-log/visitor-log.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
+import { VisitorLog } from './visitor-log/visitor-log.entity';
 
 @Module({
   imports: [
@@ -46,6 +45,7 @@ import { join } from 'path';
         Room,
         RoomSchedule,
         Announcement,
+        VisitorLog,
       ],
       autoLoadEntities: true,
       synchronize: true,

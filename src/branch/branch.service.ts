@@ -31,8 +31,8 @@ export class BranchService {
     return { msg: 'No Company found' };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} branch`;
+  async findOne(id: string) {
+    return await this.branchRepository.findOne({ id });
   }
 
   update(id: number, updateBranchDto: UpdateBranchDto) {

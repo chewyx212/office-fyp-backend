@@ -32,7 +32,7 @@ export class BranchController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.branchService.findOne(+id);
+    return this.branchService.findOne(id);
   }
 
   @Patch(':id')

@@ -1,26 +1,32 @@
+import { VisitorLogRepository } from './visitor-log.repository';
 import { Injectable } from '@nestjs/common';
 import { CreateVisitorLogDto } from './dto/create-visitor-log.dto';
-import { UpdateVisitorLogDto } from './dto/update-visitor-log.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/auth/user.entity';
+import { BranchRepository } from 'src/branch/branch.repository';
 
 @Injectable()
 export class VisitorLogService {
-  create(createVisitorLogDto: CreateVisitorLogDto) {
-    return 'This action adds a new visitorLog';
+  constructor(
+    @InjectRepository(VisitorLogRepository)
+    private visitorLogRepository: VisitorLogRepository,
+    @InjectRepository(BranchRepository)
+    private branchRepository: BranchRepository,
+  ) {}
+  async create(user: User, createVisitorLogDto: CreateVisitorLogDto) {
+    const { branchId } = createVisitorLogDto;
+    const branch = await this.branchRepository.findOne({ id: branchId });
+
+    return await this.visitorLogRepository.userCheckIn(user, branch);
   }
 
-  findAll() {
-    return `This action returns all visitorLog`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} visitorLog`;
-  }
-
-  update(id: number, updateVisitorLogDto: UpdateVisitorLogDto) {
-    return `This action updates a #${id} visitorLog`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} visitorLog`;
+  async findAll(branchId: string) {
+    const branch = await this.branchRepository.findOne({ id: branchId });
+    console.log(branch);
+    const log = await this.visitorLogRepository.find({
+      where: { branch: branch },
+      relations: ['user', 'branch'],
+    });
+    return log;
   }
 }
